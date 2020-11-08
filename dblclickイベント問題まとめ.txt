@@ -1,0 +1,75 @@
+そもそもどこの範囲をdblclickしたら反応するのだ？
+	li[data-id=*]をクリックしたら!
+	⇒ liをダブルクリックしたら必ず発火するので
+	liをCSSで非表示にすることはないので
+	CSSでdblclickを無効にすることはできない
+⇒やっぱりdblclickハンドラを一時無効にするほかない...
+
+
+dblclickハンドラ
+
+Conroller.setHandlerToDynamics()	// 全ての動的生成要素にイベントハンドラをつけるView.bindEventListener()を呼び出す
+
+View.bindEventLisnter	// dblclickイベントとハンドラをバインドする
+	list.addEventListener('dblclick', function(uidなど){});
+
+
+
+
+
+// dblclikされたあとの流れ
+Controller.dblclicked
+	View.editItem()
+
+View.editItem()
+	どれがクリックされたのか取得して
+	その要素の見た目をinputフォームにすr
+	inputフォームにイベントリスナ
+	(Controllerのメソッドをハンドラとする)をつける
+	ここまででひと段落
+	※ここまででController.setViewは呼んでいない
+
+
+
+とみてきてわかること
+
+
+- 'dblclick'イベントをバインドしているハンドラは無名関数である
+	⇒名前ありのスコープアウトしない関数にしないといかん...
+
+- スコープアウトしない関数をハンドラとできたら、
+	View.eidtItemでdblclickイベントハンドラを解除する
+
+- キャンセルまたはnew titleで更新したらdblclickハンドラをもとに戻す
+
+
+他 li[data-id]のclassNameをeditにしないといかん
+
+
+
+
+
+新しい処理順序案
+
+Controller.setHandlerToDynamics
+
+View.bindEventListener
+	ここでli className="edit"か判定する
+
+	editがついている要素: フォームにﾄﾗﾝｽﾌｫｰﾑ、必要なｲﾍﾞﾝﾄﾊﾝﾄﾞﾗバインド
+	(dblclickイベントハンドラをつけない)
+	editがついていない要素：いつもどおり
+
+
+document.addEventListener()のはんどら
+div.temporary input.addEventListener()のはんどら
+はすでに作った通りに
+keypressevent.key === "Enter" or click outsideでli className="edit"を解除
+
+⇒ みためﾄﾗﾝｽﾌｫｰﾑ ⇒ (新タイトルを送る) ⇒ setView ⇒bindEventListener
+
+
+
+todomvcの方では完全にcssで回避している...
+
+

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-framework="javascript">
+  <head>
+    <meta charset="utf-8" />
+    <title>todo-app vanillaJS MVC</title>
+    <!-- css for debug  -->
+    <link rel="stylesheet" href="todoApp.css" />
+    -->
+    <!-- css for release ver.
+	<!-- <link rel="stylesheet" href="wunderlist_ish_design.css"> -->
+  </head>
+
+  <body>
+    <section class="todoapp">
+      <header class="header">
+        <h1>todos</h1>
+        <input
+          class="new-todo"
+          placeholder="What needs to be done?"
+          autofocus
+        />
+      </header>
+      <section class="main">
+        <input id="toggle-all" class="toggle-all" type="checkbox" />
+        <label for="toggle-all">Mark all as complete</label>
+        <ul class="todo-list">
+          <!--
+					 <li data-id="same-as-todo[].id" class="Boolean">
+						<div class="view">
+							<input class="toggle" type="checkbox">
+							<label>todo[].title</label>
+							<button class="destory"></button>
+						</div>
+					 </li> 
+					-->
+        </ul>
+      </section>
+      <footer class="footer">
+        <span class="todo-count"></span>
+        <ul class="filters">
+          <li>
+            <a href="#/" class="selected">All</a>
+          </li>
+          <li>
+            <a href="#/active">Active</a>
+          </li>
+          <li>
+            <a href="#/completed">Completed</a>
+          </li>
+        </ul>
+        <button class="clear-completed">Clear completed</button>
+      </footer>
+    </section>
+    <script src="./script/Router.js"></script>
+    <script src="./script/Template.js"></script>
+    <script src="./script/Store.js"></script>
+    <script src="./script/View.js"></script>
+    <script src="./script/Model.js"></script>
+    <script src="./script/Controller.js"></script>
+    <script src="./App.js"></script>
+  </body>
+</html>

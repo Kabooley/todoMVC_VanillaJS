@@ -1,0 +1,452 @@
+/* --------------------------------------------------- */
+/* COMMONS */
+/* --------------------------------------------------- */
+/* 
+color theme: 
+base: #1B564F
+higher level: #1B564F
+lower level: #DDADC5
+
+*/
+
+
+
+/* --------------------------------------------------- */
+/* BASIC STYLES */
+/* --------------------------------------------------- */
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+html {
+	background: #1B564F;
+	background: -webkit-linear-gradient(top, #1B564F, #DDADC5);
+	background: -moz-linear-gradient(top, #1B564F, #DDADC5);
+	background: linear-gradient(to bottom, #1B564F, #DDADC5);
+	/* font-family */
+	/* text-rendering */
+	text-rendering: optimizeLegibility;
+	font-family: sans-serif;
+}
+
+
+.todoapp {
+	display: block;
+	width: 80%;
+	margin: 10px auto;
+	padding: 0;
+}
+
+
+
+
+/* --------------------------------------------------- */
+/* REUSABLE COMPONENT */
+/* --------------------------------------------------- */
+
+input:focus {
+	outline: none;
+}
+
+li {
+	list-style: none;
+}
+
+
+button {
+	font-family: inherit;
+	font-weight: inherit;
+	color: inherit;
+	-webkit-appearance: none;
+	appearance: none;
+	outline: none;
+	padding: 0;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+}
+
+/* --------------------------------------------------- */
+/* HEADER */
+/* --------------------------------------------------- */
+
+.header {
+	display: block;
+	width: 80%;
+	margin: 0 auto;
+}
+
+
+.header h1 {
+	display: block;
+	color: #fff;
+	font-size: 80px;
+	text-align: center;
+	opacity: 0.8;
+}
+
+.new-todo {
+	display: block;
+	margin: 4px 0 4px 0;
+	width: 100%;
+	padding: 8px 8px 8px 48px;
+	font-size: 32px;
+	border: none;
+	border-radius: 10px;
+	opacity: 0.3;
+	cursor: pointer;
+	color: #0f2f2b;
+}
+
+.new-todo:hover,
+.new-todo:active {
+	opacity: 0.9;
+}
+
+.new-todo:focus {
+	outline: none;
+}
+
+
+
+/* --------------------------------------------------- */
+/* MAIN */
+/* --------------------------------------------------- */
+
+/* --- main ----------------------------------------- */
+
+.main {
+	display: block;
+	position: relative;
+	width: 80%;
+	margin: 40px auto;
+}
+.toggle-all {
+	/* そもそも表示させない appearance: noneで 0 * 0 になる*/
+	appearance: none;
+	position: absolute;
+
+}
+
+.toggle-all + label {
+	appearance: none;
+	position: absolute;
+	/* font-sizeでもともとのlabelのtextContentを「消す」 これでlabelが0*0になる  */
+	font-size: 0;
+
+	top: -93px;
+	left: 0px;
+	transform: rotate(90deg);
+}
+
+
+.toggle-all + label:before {
+	/* こっちもposition: absoluteにするとすごいずれる */
+	content: ">";
+	padding: 0 12px 0 12px;
+	color: #0f2f2b;
+	font-size: 36px;
+	opacity: 0.3;
+}
+
+
+.toggle-all:hover + label:before {
+	opacity: 1;
+}
+
+.toggle-all:checked + label:before {
+	color: #0f2f2b;
+}
+
+
+/* --- todo-list ----------------------------------------- */
+.todo-list {
+	margin: 0;
+	padding: 0;
+}
+
+.todo-list li {
+	display: block;
+	position: relative;
+	width: 100%;
+	margin: 4px 1px 4px 1px;
+	padding: 4px 4px 4px 4px;
+	font-size: 32px;
+	border: none;
+	border-radius: 10px;
+	opacity: 0.8;
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: background-color 0.2s, opacity 0.2s;
+    color: #0f2f2b;
+}
+
+.todo-list li:hover,
+.todo-list li:active {
+    opacity: 1;
+	background-color: rgba(255, 255, 255, 1);
+    transition: background-color 0.2s, opacity 0.2s;
+}
+ 
+
+/* -- toggle button ---------------------------------------- */
+
+.todo-list li .toggle {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 40px;
+
+}
+
+.todo-list li .toggle + label {
+	padding-left: 48px;
+	word-break: break-all;
+
+}
+
+
+.todo-list li .toggle + label:before {
+	content: "";
+	position: absolute;
+	display: inline-block;
+
+	/* ここを指定しないと、もともとのlabelの値と表示上被る */
+	top: 12px;
+	left: 6px;
+
+	width: 38px;
+	height: 38px;
+
+	/* svgで */
+	/* ただし先に指定したwidthやheightで思い通りに手を加えられない */
+	/* サイズ変更や色の変更などに対応させるには...? */
+	/* 
+	background-image: url()でsvgを取得する方法
+	方法１：
+		background-image: url("svg/checkbox.svg");
+	方法２：
+		background-image: url(直接svgの中身を入力する)
+
+	問題：
+	方法②の場合、すべての記号をエスケープしなくてはいけない
+	例) '>'  -> '%3C' という具合
+	助けになった記事
+	https://qiita.com/mimonelu/items/68a57a8c3c5a89404e5b
+	ということでsvgのxml記述をURIにエンコードする
+	svgのxmlをすべて1行にしてから
+	encodeURIしてから
+	'#'を'%23'に変換する
+
+
+	手順
+	url()の中身の最も初めに'data:imag/svg+xml;utf8,'を付ける
+	svgファイルのxmlをすべてURIにエンコードする
+		JavaScriptの標準関数encodeURIを使うといいかも　コンソールとかで
+	encodeURIされた文字列は'#'だけ変換されない模様なのでこいつを'%23'に変換する
+	url('data:image/svg+xml;utf8,)の続きにエンコード完了したURIを貼り付ける
+	完了！
+	
+	*/
+	background-image: url('data:image/svg+xml;utf8,%3Csvg%20width=%2240%22%20height=%2240%22%20viewBox=%220%200%2040%2040%22%20fill=%22none%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%2220%22%20cy=%2220%22%20r=%2220%22%20fill=%22%234CE915%22/%3E%3Cline%20x1=%221.5%22%20y1=%22-1.5%22%20x2=%2218.0117%22%20y2=%22-1.5%22%20transform=%22matrix(0.672673%200.73994%20-0.489416%200.87205%205%2020.5625)%22%20stroke=%22white%22%20stroke-width=%223%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3Cline%20x1=%2218.693%22%20y1=%2232.901%22%20x2=%2234.776%22%20y2=%2211.307%22%20stroke=%22white%22%20stroke-width=%223%22%20stroke-linecap=%22round%22/%3E%3C/svg%3E');
+	background-repeat: no-repeat;
+	background-position: center center;
+	/* label:beforeのwidth, heightがあったうえで, background-sizeでbackground-imageのサイズを変更可能 */
+	background-size: 32px;
+	/* これだとsvgの背景がgreyになる */
+	/* background-color: grey; */
+	transition: background-color 0.3s ease;
+}
+
+
+/* 
+svgをcssで好き勝手にいじるぞ
+
+*/
+.todo-list li .toggle:hover + label:before {
+
+}
+ 
+
+
+
+
+/* -- destory button -------------------------------------------- */
+/* 
+	li[data-id]をホバーしている限りdestoryボタンは表示されて、
+	通常は非表示である
+
+	これを実現するために
+	通常はdisplay: none;
+	ホバーしたらdisplay: block;
+	でホバーしたときだけ現れるようにできる
+*/
+
+.todo-list li .destroy {
+	display: none;
+	position: absolute;
+	top: 4px;
+	right: 10px;
+	width: 40px;
+	height: 40px;
+	font-size: 40px;
+	border: none;
+	background-color: inherit;
+}
+
+
+.todo-list li .destroy:hover {
+	color:  #0f2f2b;
+	border: none;
+}
+
+.todo-list li .destroy:after {
+	content: "x";
+}
+
+.todo-list li:hover .destroy {
+	display: block;
+}
+
+
+
+
+
+/* --------------------------------------------------- */
+/* FOOTER */
+/* --------------------------------------------------- */
+
+/* 
+height: 24px;
+margin-top: 0;
+font-size: 22px
+
+*/
+
+.footer {
+	display: block;
+	position: relative;
+	width: 80%;
+	margin: 0 auto;
+	text-align: center;
+	color: #1B564F;
+}
+
+
+/* 
+float
+要素は浮動すると文書の通常のフローから外される
+包含ブロックの辺にぶつかるまで移動する
+
+*/
+.todo-count {
+	float: left;
+	margin-left: 4px;
+}
+
+.todo-count:after {
+	content: " items left";
+	position: absolute;
+	left: 18px;
+	color: inherit;
+}
+
+/* ど真ん中におくテクニック */
+/* right: 0; left: 0; */
+.filters {
+	position: absolute;
+	right: 0;
+	left: 0;
+}
+
+.filters li {
+	display: inline;
+	margin: 0 12px;
+}
+
+.filters li a {
+	text-decoration: none;
+	color: inherit;
+	padding: 2px 6px;
+	border-radius: 4px;
+}
+
+.filters li a:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* どうやらこいつらをクリックしても押されたという事実はページリロードで消えてしまうようだ... */
+/* なのでクリックしてもactiveにならないので */
+.filters li a:active {
+	background-color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* parent css: button */
+.clear-completed {
+	/* 包含ブロックの右側に必ず浮動する */
+	float: right;
+	cursor: pointer;
+	margin-right: 0;
+	font-size: inherit;
+	color: #1B564F;
+}
+
+/* 何故か効かない... */
+.clear-completed:hover {
+	text-decoration: underline;
+	color: white;
+	background-color: white;
+}
+
+
+
+/* -----------------------------------------------------
+課題)
+
+- svgを自在に操れるようにする
+	色とかサイズとかをCSSでいじれるようにする
+	後回し気味
+
+- destory ボタン
+	済み
+
+- toggleされたらline-through
+
+- footer
+	todo-countで0を表示するようにjsを修正する
+	clear-completedをホバーしたらアンダーラインを表示させる
+	.filters li aをクリックしたらページがリロードされるので、active状態が維持されない
+
+
+- edit
+	class="edit"を付与するようにjs修正しないといかん
+
+- media responsive
+	現状.footer要素が、windowサイズが小さくなると重なってしまう
+
+
+
+JavaScript側の問題）
+
+- 	なんかdblclick処理が重複されている模様なんですが...
+	ダブルクリックが何度でもできる(つまり入力フォームが無限に生成される...)
+	最新バージョンじゃないか、まだdblclickにバグがあるか
+
+- 	routingでページリロードされちゃあいませんか？
+	.footer .filters li aのいずれをクリックしてもページがリロードされるから疑似要素activeが有効にならない
+
+- .editをtodo-list liに付与するように修正
+*/

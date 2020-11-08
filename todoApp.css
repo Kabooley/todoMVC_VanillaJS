@@ -1,0 +1,28 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: ivory;
+}
+
+.todo-list {
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.todo-list li {
+    font-size: 1.4rem;
+}
+
+.todo-list li.true {
+    text-decoration: line-through;
+    color: grey;
+}
