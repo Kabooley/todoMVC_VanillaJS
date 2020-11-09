@@ -73,3 +73,39 @@ keypressevent.key === "Enter" or click outsideでli className="edit"を解除
 todomvcの方では完全にcssで回避している...
 
 
+★CSS回避策
+li[data-id]がdblclickの対象になっているのが問題
+これをlabelがdblclickされたら反応するように変更する
+
+
+変更しなくてはいけない箇所
+View.bindEventListener
+View.editItem
+CSS input .toggle
+
+とくにCSS .toggleは、todomvcの方だと:beforeや:afterは使っていない
+使わずにちぇくボックスをsvgつかっているので
+labelに影響なく
+inputとlabelが区別できている
+
+input opacity: 0;
+それだけであとは
+.toggle + label {
+background-image:svgファイル
+}
+にしている...
+
+なんやねん
+
+
+
+
+
+
+結果：
+
+cssだけでなんとかなった~
+要素を重ねることでdblclickを避けることができるよ
+
+dblclickイベントリスナがaddされている要素と同じサイズのinputをposition: absoluteで重ねるだけ
+両要素は同じ包含ブロックを持つこと

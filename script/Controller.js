@@ -281,11 +281,9 @@
    * dbl clicked
    *
    *
-   * - need to add click event listener to 'document' when the element is editting
-   * -
+   * div.viewのlastChildにdiv.temporaryという要素を追加する
+   * div.temporaryの子要素にinput.inputというフォーム要素がある
    * 
-   * dblclickを一度発火させたら、editDoneするかキャンセルするまで
-   * dblclickイベントハンドラを停止しておかないといけない
    *
    */
   Controller.prototype.dblClicked = function (data) {
@@ -297,9 +295,6 @@
     self.view.editItem(
       data,
       function (event, target, callback) { self.editDoneHandler(event, target, callback) });
-
-
-
   }
 
 

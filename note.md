@@ -148,3 +148,32 @@ content属性はlabelの中身を書き換えるっぽい
 
 4. labelの位置をinput.toggle-allに重ねる
 
+
+
+
+## editとdblclickの両立
+
+問題：dblclickをedit中はそのハンドラを中断したい
+
+解決の方策：
+1. jsでそのようにリファクタリングする
+2. edit中はdblclick反応領域を、cssで「つぶす」
+
+
+当面は方策２で行く
+
+課題
+
+css labelを包含ブロック全体を覆うようにする
+js  li[data-id]のclassNameにeditを含めるようにする
+
+
+
+- 要素を重ねる方法
+input.editをdiv.viewの子要素の上に完全に重ねる方法
+z-indexって必要なの？
+
+
+#### svgをcssでいじる
+
+

@@ -1,5 +1,4 @@
 (function (window) {
-
   var View = function (template) {
     this.template = template;
 
@@ -9,25 +8,22 @@
     this.el_toggleAll = qs(null, namespace.TOGGLE_ALL);
     this.el_clearCompleted = qs(null, namespace.CLEAR_COMPLETED);
     this.el_todoCount = qs(null, namespace.TODO_COUNT);
-    this.el_body = qs(null, 'body');
-  }
-
+    this.el_body = qs(null, "body");
+  };
 
   /****************************************************
    * bindEventListener
    *
    */
   View.prototype.bindEventListener = function (event, handler) {
-
     // console.log('[View] bindEventListener');
 
     var self = this;
-    var datasets,           // array which is includes li.data-id
-      completed,        // current li.data-id className whic express state of toggle
+    var datasets, // array which is includes li.data-id
+      completed, // current li.data-id className whic express state of toggle
       result = true;
 
     switch (event) {
-
       // - static cases
       case namespace.ADD_NEW_TODO:
         self.el_newTodo.addEventListener("keypress", function (event) {
@@ -36,13 +32,16 @@
         return;
 
       case namespace.TOGGLE_ALL_CLICKED:
-        self.el_toggleAll.addEventListener('click', function () { handler() });
+        self.el_toggleAll.addEventListener("click", function () {
+          handler();
+        });
         return;
 
       case namespace.CLEAR_COMPLETED_CLICKED:
-        self.el_clearCompleted.addEventListener('click', function () { handler() });
+        self.el_clearCompleted.addEventListener("click", function () {
+          handler();
+        });
         return;
-
 
       // - dynamic cases
       case namespace.TOGGLE_CLICKED:
@@ -55,11 +54,11 @@
 
         datasets.forEach(function (uid, index) {
           toggle = qs(null, '[data-id="' + uid + '"] input');
-          toggle.addEventListener('click', function () {
+          toggle.addEventListener("click", function () {
             handler({
               uid: uid,
               index: index,
-            })
+            });
           });
         });
         return;
@@ -74,44 +73,42 @@
 
         datasets.forEach(function (uid, index) {
           destory = qs(self.el_todoList, '[data-id="' + uid + '"] button');
-          destory.addEventListener('click',
-            function () {
-              handler({
-                uid: uid,
-                index: index
-              })
+          destory.addEventListener("click", function () {
+            handler({
+              uid: uid,
+              index: index,
             });
+          });
         });
         return;
 
       case namespace.DBL_CLICKED:
-
         // ul.todo-listの子要素li[data-id]を配列で取得
         datasets = Object.keys(self.el_todoList.children).map(function (index) {
-          result = result && convertStr2Bool(self.el_todoList.children[index].className);
+          result =
+            result &&
+            convertStr2Bool(self.el_todoList.children[index].className);
           return self.el_todoList.children[index].dataset.id;
         });
 
         datasets.forEach(function (uid, index) {
-
           var list = qs(self.el_todoList, '[data-id="' + uid + '"] .view');
-          var title = qs(list, 'label').textContent;
-          list.addEventListener('dblclick',
-            function (event) {
-              handler({
-                uid: uid,
-                index: index,
-                event: event
-              })
+
+          var title = qs(list, "label").textContent;
+          list.addEventListener("dblclick", function (event) {
+            handler({
+              uid: uid,
+              index: index,
+              event: event,
             });
+          });
         });
         return;
 
       default:
         return;
     }
-  }
-
+  };
 
   /*********************************************
    * render
@@ -121,12 +118,11 @@
    *
    */
   View.prototype.render = function (todoList) {
-    console.log('[View] render');
+    console.log("[View] render");
     var self = this;
 
     self.el_todoList.innerHTML = self.template.getDefaultList(todoList);
-  }
-
+  };
 
   /*******************************************
    * toggleAllStatus
@@ -141,33 +137,29 @@
    *
    */
   View.prototype.toggleAllStatus = function (doesCheck) {
-    console.log('[View] toggle all status');
+    console.log("[View] toggle all status");
     var self = this;
     var lists, booleanset;
 
     //
-    if (typeof doesCheck === 'boolean') {
+    if (typeof doesCheck === "boolean") {
       self.el_toggleAll.checked = doesCheck;
-    }
-    else {
+    } else {
       // 全部調べる
     }
-  }
-
+  };
 
   /**********************************************
    *
    *
    */
   View.prototype.renderCount = function (count) {
-    console.log('[View] render count');
+    console.log("[View] render count");
     var self = this;
-    count = count === null || count === 0 ? '' : count;
+    count = count === null || count === 0 ? "" : count;
 
     self.el_todoCount.textContent = count;
-  }
-
-
+  };
 
   /****************************************************
    * visible clear completed
@@ -176,50 +168,53 @@
    *
    */
   View.prototype.visibleClearCompleted = function (count) {
-    console.log('[View] visible clear-completed');
+    console.log("[View] visible clear-completed");
     var self = this;
 
     if (count) {
-      self.el_clearCompleted.innerHTML = 'Clear Completed';
-      self.el_clearCompleted.removeAttribute('style');
-      self.el_clearCompleted.setAttribute('style', 'display: block');
+      self.el_clearCompleted.innerHTML = "Clear Completed";
+      self.el_clearCompleted.removeAttribute("style");
+      self.el_clearCompleted.setAttribute("style", "display: block");
+    } else {
+      self.el_clearCompleted.innerHTML = "";
+      self.el_clearCompleted.removeAttribute("style");
+      self.el_clearCompleted.setAttribute("style", "display: none");
     }
-    else {
-      self.el_clearCompleted.innerHTML = '';
-      self.el_clearCompleted.removeAttribute('style');
-      self.el_clearCompleted.setAttribute('style', 'display: none');
-    }
-  }
-
-
-
+  };
 
   /*********************************************
    * Transform VIew
-   * 
+   *
    * toggle the div.view to input form
-   * 
+   *
    * @param: signal identifies conert it to form or prev view
-   * 
-   * 
-   * 
-   * 
+   *
+   *
+   *
+   *
    */
   View.prototype.transformView = function (signal, target) {
-    console.log('[View] transformView');
+    console.log("[View] transformView");
     var self = this;
+    var title, temporary, input;
 
-    console.log(target);
+    title = qs(target, "label").textContent;
+    console.log(typeof title);
 
     // show edit form
     if (signal) {
       // create input form
-      var temporary = document.createElement('div');
-      temporary.setAttribute('class', 'temporary');
-      temporary.innerHTML = '<input class="input" type="text">';
+      temporary = document.createElement("div");
+      temporary.setAttribute("class", "temporary");
+      // temporary.innerHTML = '<input class="input" type="text">';
+      input = document.createElement("input");
+      input.setAttribute("type", "text");
+      input.setAttribute("class", "input");
+      input.setAttribute("value", title);
+      temporary.appendChild(input);
       target.appendChild(temporary);
       // hide div.view
-      qs(target, '.view').classList.add('hidden');
+      qs(target, ".view").classList.add("hidden");
     }
     // hide edit view
     else {
@@ -228,11 +223,10 @@
       if (qs(target, namespace.TEMPORARY)) {
         target.removeChild(target.lastChild);
         // show div.view
-        qs(target, '.view').classList.remove('hidden');
+        qs(target, ".view").classList.remove("hidden");
       }
     }
-  }
-
+  };
 
   // >>No longer needed<<
   /*******************************************************************
@@ -257,8 +251,6 @@
   //   });
   // }
 
-
-
   // >>No longer needed<<
   // View.prototype.documentClickHandler = function (event, target, callback) {
   //   console.log('[View] document click handler');
@@ -274,28 +266,28 @@
   //   document.removeEventListener('click', callback);
   // }
 
-
   /******************************************
    * editItem
    *
    *    1. transform div.view to div.temporary
    *    2. qs(target, div.temporary input.input).addEventListener('keypress)
    *    3. document.addEventListener('click')
-   * 
+   *
    *     chart 2 and 3 requires Controller method to react the user input.
-   *  
+   *
    *
    */
   View.prototype.editItem = function (data, editHandler) {
-    console.log('[View] edit item');
+    console.log("[View] edit item");
     var self = this;
     var target, input;
-    editHandler = editHandler || function () { };
+    editHandler = editHandler || function () {};
 
     target = qs(null, '[data-id="' + data.uid + '"]');
     self.transformView(true, target);
-    input = qs(target, '.input');
+    input = qs(target, ".input");
     input.focus();
+    input.select();
 
     // used to be
     // self.setEventListnerToTemporary(target);
@@ -326,23 +318,25 @@
     //   return callback;
     // })());
 
-
     // AND THIS IS WHAT I WANT
     // callbackはControllerのメソッドにする
     var callback = function (event) {
       editHandler(event, target, callback);
-    }
-    document.addEventListener('click', (function () {
-      return callback;
-    })());
-    input.addEventListener('keypress', (function () {
-      return callback;
-    })());
-  }
-
-
+    };
+    document.addEventListener(
+      "click",
+      (function () {
+        return callback;
+      })()
+    );
+    input.addEventListener(
+      "keypress",
+      (function () {
+        return callback;
+      })()
+    );
+  };
 
   window.app = window.app || {};
   window.app.View = View;
-
 })(window);
