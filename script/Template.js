@@ -9,8 +9,30 @@
             + '<button class="destroy"></button>'
             + '</div>'
             + '</li>';
+	}
+	
 
-    }
+	var htmlEscaper = function (string) {
+		// 注意！'&'は最初にもって来ないとエスケープ記号の&を変換してしまうぞ!
+		return string
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;')
+		.replace(/`/g, '&#x60;')
+		.replace(/\\/g, '&#x27;');
+	}
+
+
+	// 
+	var isTitleHtml = function (string) {
+		var re = /[<>\\"'`]/g;
+		var regularExpressObject = new RegExp(re);
+		return string && regularExpressObject.test(string)
+			? htmlEscaper(string)
+			: string;
+	}
 
 
     /**************************************
@@ -28,9 +50,12 @@
             // console.log(todoList[i]);
             var template = self.defaultTemplate;
             var id = todoList[i].id;
-            var title = todoList[i].title;
+            var title = isTitleHtml(todoList[i].title);
+            // var title = todoList[i].title;
             var completed = todoList[i].completed;
-            var didCheck = todoList[i].completed ? 'checked' : '';
+			var didCheck = todoList[i].completed ? 'checked' : '';
+			
+			console.log(title);
 
 
             template = template.replace('{{id}}', id);
