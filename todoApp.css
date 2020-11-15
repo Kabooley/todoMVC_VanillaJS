@@ -26,3 +26,19 @@ body {
     text-decoration: line-through;
     color: grey;
 }
+
+.clear-completed {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border: none;
+	background-color: purple;
+}
+
+.clear-completed:hover {
+	background-color: rgb(177, 1, 177);
+}
+
+.clear-completed:active {
+	background-color: rgb(252, 38, 252);
+}
