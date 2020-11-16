@@ -1,5 +1,4 @@
 (function (window) {
-
   var Controller = function (view, model) {
     var self = this;
 
@@ -7,57 +6,64 @@
     this.view = view;
 
     self.view.bindEventListener(
-      namespace.ADD_NEW_TODO, self.addNewTodo.bind(self)
+      namespace.ADD_NEW_TODO,
+      self.addNewTodo.bind(self)
     );
     self.view.bindEventListener(
-      namespace.TOGGLE_ALL_CLICKED, self.toggleAll.bind(self)
+      namespace.TOGGLE_ALL_CLICKED,
+      self.toggleAll.bind(self)
     );
     self.view.bindEventListener(
-      namespace.CLEAR_COMPLETED_CLICKED, self.clearCompleted.bind(self)
+      namespace.CLEAR_COMPLETED_CLICKED,
+      self.clearCompleted.bind(self)
     );
 
     // 必要ないかも...
     self.view.bindEventListener(
-      namespace.TOGGLE_CLICKED, self.toggle.bind(self)
+      namespace.TOGGLE_CLICKED,
+      self.toggle.bind(self)
     );
-
-  }
-
-
+  };
 
   /*******************************************
    *
    *
    */
   Controller.prototype.setView = function () {
-    console.log('[Controller] setView');
+    console.log("[Controller] setView");
 
     var self = this;
     switch (checkRoute()) {
-      case '/': self.showAll(); break;
-      case '/active': self.showActive(); break;
-      case '/completed': self.showCompleted(); break;
-      default: console.log('the route is not defined'); break;
+      case "/":
+        self.showAll();
+        break;
+      case "/active":
+        self.showActive();
+        break;
+      case "/completed":
+        self.showCompleted();
+        break;
+      default:
+        console.log("the route is not defined");
+        break;
     }
 
     self._filter();
-  }
-
+  };
 
   /***********************************************
    *
    *
    */
   Controller.prototype.showAll = function () {
-    console.log('[Controller] showAll');
+    console.log("[Controller] showAll");
     var self = this;
 
-    self.model.read(
-      function (param) { self.view.render(param); }
-    );
+    self.model.read(function (param) {
+      self.view.render(param);
+    });
     self.setHandlerToDynamics();
-  }
-
+  };
 
   /************************************************
    * showActive
@@ -72,66 +78,55 @@
    *
    */
   Controller.prototype.showActive = function () {
-    console.log('[Controller] showActive');
+    console.log("[Controller] showActive");
     var self = this;
 
-    self.model.read(
-      function (param) {
-        var actives = param.filter(function (todo) {
-          return todo.completed === false;
-        });
-        console.log(actives);
-        self.view.render(actives);
-      }
-    );
+    self.model.read(function (param) {
+      var actives = param.filter(function (todo) {
+        return todo.completed === false;
+      });
+      console.log(actives);
+      self.view.render(actives);
+    });
 
     self.setHandlerToDynamics();
-  }
-
+  };
 
   /*********************************************
    *
    *
    */
   Controller.prototype.showCompleted = function () {
-    console.log('[Controller] showCompleted');
+    console.log("[Controller] showCompleted");
     var self = this;
 
-    self.model.read(
-      function (param) {
-        var completed = param.filter(function (todo) {
-          return todo.completed;
-        });
-        console.log(completed);
-        self.view.render(completed);
-      }
-    );
+    self.model.read(function (param) {
+      var completed = param.filter(function (todo) {
+        return todo.completed;
+      });
+      console.log(completed);
+      self.view.render(completed);
+    });
     self.setHandlerToDynamics();
-  }
-
-
+  };
 
   /***************************************************
    *
    *
    */
   Controller.prototype.addNewTodo = function (event) {
-    console.log('[Controller] addNewTodo');
+    console.log("[Controller] addNewTodo");
 
     var self = this;
-    if (event.keyCode === 13 && event.target.value !== '') {
-      self.model.create(
-        event.target.value, null,
-        function () {
-          self.setView();
-        }
-      );
+    if (event.keyCode === 13 && event.target.value !== "") {
+      self.model.create(event.target.value, null, function () {
+        self.setView();
+      });
       var input = qs(null, namespace.NEW_TODO);
-      input.value = '';
+      input.value = "";
       input.focus();
     }
-  }
-
+  };
 
   /********************************************
    *
@@ -151,7 +146,7 @@
    *
    */
   Controller.prototype.toggle = function (data) {
-    console.log('[Controller] toggle');
+    console.log("[Controller] toggle");
     var self = this;
     var completed;
 
@@ -167,8 +162,7 @@
         self.setView();
       }
     );
-  }
-
+  };
 
   /***************************************
    * 現在のtodoのchecked状況はまばらである -> 全部checkedにする
@@ -177,10 +171,9 @@
    *
    */
   Controller.prototype.toggleAll = function () {
-    console.log('[Controller] toggleAll');
+    console.log("[Controller] toggleAll");
     var self = this;
     var result;
-
 
     // 一旦todo-listの各completed値からなる配列を生成して
     var todos = self.model.read(null);
@@ -200,63 +193,56 @@
         {
           id: todos[i].id,
           title: todos[i].title,
-          completed: result
+          completed: result,
         },
         null
       );
     }
     self.setView();
-  }
-
+  };
 
   /*************************************************
    *
    *
    */
   Controller.prototype.destory = function (data) {
-    console.log('[Controller] destory');
+    console.log("[Controller] destory");
     var self = this;
 
-    self.model.delete(
-      data.uid,
-      function () { self.setView(); }
-    );
-  }
-
-
+    self.model.delete(data.uid, function () {
+      self.setView();
+    });
+  };
 
   /******************************************
    * editDoneHandler
-   * 
-   *  @param: 
+   *
+   *  @param:
    *    event : Two type of event will be got.
    *            KeyboardEvent for input event listener,
    *            MouseEvent for document event listener.
-   *      
+   *
    *    target: li [data-id] which is editing.
-   * 
+   *
    *    callback: function to remove addEventListener from document.
-   * 
+   *
    * editDoneHandler is the callback function for two events.
    * "keypress" and "click".
-   * 
-   * 
+   *
+   *
    */
   Controller.prototype.editDoneHandler = function (event, target, callback) {
-    console.log('[Controller] edit done handler');
+    console.log("[Controller] edit done handler");
     var self = this;
 
     if (event.type === "click") {
       if (event.path.includes(target)) {
         return;
-      }
-      else {
+      } else {
         self.view.transformView(false, target);
-        document.removeEventListener('click', callback);
+        document.removeEventListener("click", callback);
       }
-    }
-    else if (event.type === "keypress") {
-
+    } else if (event.type === "keypress") {
       if (event.key === "Enter" && event.target.value !== "") {
         // update the title
         console.log("send new title");
@@ -264,18 +250,16 @@
         self.model.update(
           target.dataset.id,
           { title: event.target.value },
-          function () { self.setView(); }
+          function () {
+            self.setView();
+          }
         );
-
-      }
-      else if (event.key === "Enter") {
+      } else if (event.key === "Enter") {
         self.view.transformView(false, target);
-        document.removeEventListener('click', callback);
+        document.removeEventListener("click", callback);
       }
     }
-  }
-
-
+  };
 
   /*******************************************
    * dbl clicked
@@ -283,20 +267,19 @@
    *
    * div.viewのlastChildにdiv.temporaryという要素を追加する
    * div.temporaryの子要素にinput.inputというフォーム要素がある
-   * 
+   *
    *
    */
   Controller.prototype.dblClicked = function (data) {
-    console.log('[Controller] dbl-click');
+    console.log("[Controller] dbl-click");
     var self = this;
 
     console.log(data);
 
-    self.view.editItem(
-      data,
-      function (event, target, callback) { self.editDoneHandler(event, target, callback) });
-  }
-
+    self.view.editItem(data, function (event, target, callback) {
+      self.editDoneHandler(event, target, callback);
+    });
+  };
 
   /******************************************
    * clearCompleted
@@ -308,37 +291,41 @@
    *
    */
   Controller.prototype.clearCompleted = function () {
-    console.log('[Controller] clear completed');
+    console.log("[Controller] clear completed");
     var self = this;
 
-    self.model.read(
-      function (param) {
-        param.forEach(function (todo) {
-          self.model.update(
-            todo.id,
-            {
-              id: todo.id,
-              title: todo.title,
-              completed: false
-            },
-            null
-          );
-        });
-        self.setView();
-      }
-    );
-    self.setHandlerToDynamics();
-  }
-
-
+    self.model.read(function (param) {
+      param.forEach(function (todo) {
+        self.model.update(
+          todo.id,
+          {
+            id: todo.id,
+            title: todo.title,
+            completed: false,
+          },
+          null
+        );
+      });
+      self.setView();
+    });
+  };
 
   /************************************************
    * _filter
    *
    *
+   * この関数の機能は
+   * .toggle-allをcheckedにすべきかの判定
+   * .toggle-allをcheckedにするまたは解除する
+   * .todo-countの更新
+   * .clear-completedの表示非表示の判定、判定結果の実行
+   *
+   * ul.filters li a のどれが有効になっているのか判定して、有効になっているaタグに.selectedクラス名を追加して、それ以外の.selectedを解除する
+   *
+   *
    */
   Controller.prototype._filter = function () {
-    console.log('[Controller] _filter');
+    console.log("[Controller] _filter");
     var self = this;
     var result;
 
@@ -353,7 +340,6 @@
     // false : uncheck togle-all box
     result = bools.length > 0 ? false : true;
 
-
     // render toggle all status
     todos.length > 0
       ? self.view.toggleAllStatus(result)
@@ -362,10 +348,10 @@
     self.view.renderCount(bools.length);
     // render 'clear-completed'
     self.view.visibleClearCompleted(todos.length - bools.length);
-  }
 
-
-
+    // select visited Route
+    self.view.visualizeSelectedRoute(checkRoute());
+  };
 
   /*********************************************
    * set handler to dynamics
@@ -373,15 +359,23 @@
    * Add event listner to elements which is created every rendered time.
    */
   Controller.prototype.setHandlerToDynamics = function () {
-    console.log('[Controller] set handler to dynamics');
+    console.log("[Controller] set handler to dynamics");
 
     var self = this;
 
-    self.view.bindEventListener(namespace.TOGGLE_CLICKED, self.toggle.bind(self));
-    self.view.bindEventListener(namespace.DESTROY_CLICKED, self.destory.bind(self));
-    self.view.bindEventListener(namespace.DBL_CLICKED, self.dblClicked.bind(self));
-  }
-
+    self.view.bindEventListener(
+      namespace.TOGGLE_CLICKED,
+      self.toggle.bind(self)
+    );
+    self.view.bindEventListener(
+      namespace.DESTROY_CLICKED,
+      self.destory.bind(self)
+    );
+    self.view.bindEventListener(
+      namespace.DBL_CLICKED,
+      self.dblClicked.bind(self)
+    );
+  };
 
   window.app = window.app || {};
   window.app.Controller = Controller;
