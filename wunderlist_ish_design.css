@@ -273,6 +273,10 @@ button {
   transition: background-color 0.3s ease;
 }
 
+.todo-list li.true .toggle + label {
+  text-decoration: line-through;
+  color: #a6a6a6;
+}
 /* -- destory button -------------------------------------------- */
 /* 
 	li[data-id]をホバーしている限りdestoryボタンは表示されて、
@@ -398,6 +402,9 @@ float
   position: absolute;
   right: 0;
   left: 0;
+
+  margin: 0;
+  padding: 0;
 }
 
 .filters li {
@@ -416,27 +423,26 @@ float
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* どうやらこいつらをクリックしても押されたという事実はページリロードで消えてしまうようだ... */
-/* なのでクリックしてもactiveにならないので */
-.filters li a:active {
-  background-color: rgba(255, 255, 255, 0.8);
+.filters li a.selected {
+  border: 1px solid #1b564f;
 }
 
-/* parent css: button */
 .clear-completed {
   /* 包含ブロックの右側に必ず浮動する */
   float: right;
   cursor: pointer;
   margin-right: 0;
+  padding: 0 6px;
   font-size: inherit;
   color: #1b564f;
+
+  /* これをしないとul.filtersが重なって永遠にhoverもclickもできない */
+  position: relative;
 }
 
-/* 何故か効かない... */
 .clear-completed:hover {
   text-decoration: underline;
-  color: white;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* -----------------------------------------------------
@@ -444,8 +450,8 @@ float
 
 
 
-- toggleしたらlabelのtextをline-through
-- すべてcheckedならtoggle-allをcheckedにする
+- toggleしたらlabelのtextをline-through	済み
+- すべてcheckedならtoggle-allをcheckedにする	済み
 - footerでactiveなrouteを見た目でわかるようにする
 - footerの各要素が、画面サイズを狭くすると重なったしまう
 など@mediaでのサイズ変更に耐えうるようにする
@@ -454,7 +460,4 @@ float
 知見)
 - svgをcssで好き勝手出来るようになるまで
 - 要素を重ねることでdblclickを一時的にキャンセルする方法
-- 
-
-
 */
