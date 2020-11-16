@@ -51,8 +51,6 @@
       var completed = todoList[i].completed;
       var didCheck = todoList[i].completed ? "checked" : "";
 
-      console.log(title);
-
       template = template.replace("{{id}}", id);
       // 本当は正規表現使ってHTML判定されないように気を付けないといけない
       // 正規表現めんどいのであと
