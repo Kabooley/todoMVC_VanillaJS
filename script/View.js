@@ -182,6 +182,49 @@
     }
   };
 
+  /*******************************************************
+   * visualizeSelectedRoute
+   *
+   * @param: url is string type data which means the current route.
+   *  url is like this: "/active" or "/" or "/completed"
+   *
+   * check url and toggle className of ul.filters li a "selected".
+   *  This method must not be invoked before route is set.
+   *
+   * urlをul.filters li a のinnerTextと同じに変換する
+   * ul.filters li a のinnerTextとurlを比較する
+   * マッチすればそのclassName="selected"を付与する
+   * そうでなければclassName="selected"を消去する
+   *
+   *
+   */
+  View.prototype.visualizeSelectedRoute = function (url) {
+    var self = this;
+
+    // 引数urlをul.filters li a のinnerTEXT通りの文字列へ変換する
+    switch (url) {
+      case "/":
+        url = "All";
+        break;
+      case "/active":
+        url = "Active";
+        break;
+      case "/completed":
+        url = "Completed";
+        break;
+    }
+
+    var filters = document.querySelector("ul.filters");
+    // ul.filters li a のinnerTextとurlを比較して、マッチする場合にclass="selected"を付与する
+    Object.keys(filters.children).forEach(function (index) {
+      filters.children[index].firstElementChild.innerText === url
+        ? filters.children[index].firstElementChild.classList.add("selected")
+        : filters.children[index].firstElementChild.classList.remove(
+            "selected"
+          );
+    });
+  };
+
   /*********************************************
    * Transform VIew
    *
